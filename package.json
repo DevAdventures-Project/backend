@@ -28,6 +28,7 @@
     "@swc/cli": "^0.6.0",
     "@swc/core": "^1.11.7",
     "@types/node": "^22.13.9",
+    "prisma": "^6.4.1",
     "typescript": "^5.8.2"
   },
   "packageManager": "pnpm@10.5.2",
@@ -36,7 +37,10 @@
       "@biomejs/biome",
       "@nestjs/core",
       "@prisma/client",
-      "@swc/core"
+      "@prisma/engines",
+      "@swc/core",
+      "esbuild",
+      "prisma"
     ]
   },
   "engines": {
