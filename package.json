@@ -17,6 +17,7 @@
     "@nestjs/common": "^11.0.11",
     "@nestjs/core": "^11.0.11",
     "@nestjs/platform-express": "^11.0.11",
+    "@prisma/client": "^6.4.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2"
   },
@@ -27,11 +28,20 @@
     "@swc/cli": "^0.6.0",
     "@swc/core": "^1.11.7",
     "@types/node": "^22.13.9",
+    "prisma": "^6.4.1",
     "typescript": "^5.8.2"
   },
   "packageManager": "pnpm@10.5.2",
   "pnpm": {
-    "onlyBuiltDependencies": ["@biomejs/biome"]
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "@nestjs/core",
+      "@prisma/client",
+      "@prisma/engines",
+      "@swc/core",
+      "esbuild",
+      "prisma"
+    ]
   },
   "engines": {
     "node": ">=20"
