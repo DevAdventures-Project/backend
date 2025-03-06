@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import type { Quest } from "@prisma/client";
+import { Quest } from "@prisma/client";
 
 export class QuestEntity implements Quest {
   constructor(partial: Partial<QuestEntity>) {

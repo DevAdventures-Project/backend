@@ -9,10 +9,10 @@ import {
   Post,
 } from "@nestjs/common";
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
-import type { CreateQuestDto } from "./dto/create-quest.dto";
-import type { UpdateQuestDto } from "./dto/update-quest.dto";
+import { CreateQuestDto } from "./dto/create-quest.dto";
+import { UpdateQuestDto } from "./dto/update-quest.dto";
 import { QuestEntity } from "./entities/quest.entity";
-import type { QuestService } from "./quest.service";
+import { QuestService } from "./quest.service";
 
 @ApiTags("quests")
 @Controller("quests")

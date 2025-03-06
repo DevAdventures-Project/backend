@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import type { Item } from "@prisma/client";
+import { Item } from "@prisma/client";
 
 export class ItemEntity implements Item {
   constructor(partial: Partial<ItemEntity>) {

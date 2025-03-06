@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
-import type { ChatService } from "./chat.service";
-import type { CreateMessageDto } from "./dto/create-message.dto";
+import { ChatService } from "./chat.service";
+import { CreateMessageDto } from "./dto/create-message.dto";
 import { MessageEntity } from "./entities/message.entity";
 
 @ApiTags("chat")

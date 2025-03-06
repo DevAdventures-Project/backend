@@ -9,10 +9,10 @@ import {
   Post,
 } from "@nestjs/common";
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
-import type { CreateItemDto } from "./dto/create-item.dto";
-import type { UpdateItemDto } from "./dto/update-item.dto";
+import { CreateItemDto } from "./dto/create-item.dto";
+import { UpdateItemDto } from "./dto/update-item.dto";
 import { ItemEntity } from "./entities/item.entity";
-import type { ItemsService } from "./items.service";
+import { ItemsService } from "./items.service";
 
 @ApiTags("items")
 @Controller("items")

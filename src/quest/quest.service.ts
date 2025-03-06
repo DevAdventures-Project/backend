@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import type { PrismaService } from "../prisma/prisma.service";
-import type { CreateQuestDto } from "./dto/create-quest.dto";
-import type { UpdateQuestDto } from "./dto/update-quest.dto";
+import { PrismaService } from "../prisma/prisma.service";
+import { CreateQuestDto } from "./dto/create-quest.dto";
+import { UpdateQuestDto } from "./dto/update-quest.dto";
 
 @Injectable()
 export class QuestService {
