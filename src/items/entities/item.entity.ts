@@ -16,6 +16,9 @@ export class ItemEntity implements Item {
   description: string;
 
   @ApiProperty()
+  price: number;
+
+  @ApiProperty()
   createdAt: Date;
 
   @ApiProperty()

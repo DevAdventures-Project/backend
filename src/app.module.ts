@@ -7,6 +7,7 @@ import { ChatModule } from "./chat/chat.module";
 import { GithubModule } from "./github/github.module";
 import { ItemsModule } from "./items/items.module";
 import { JiraModule } from "./jira/jira.module";
+import { MarketplaceModule } from "./marketplace/marketplace.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { QuestModule } from "./quest/quest.module";
 import { UsersModule } from "./users/users.module";
@@ -20,6 +21,7 @@ import { WebsocketsGateway } from "./ws/websockets.gateway";
     QuestModule,
     ItemsModule,
     ChatModule,
+    MarketplaceModule,
     GithubModule,
     AuthModule,
     ScheduleModule.forRoot(),

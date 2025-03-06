@@ -11,4 +11,9 @@ export class CreateItemDto {
   @IsNotEmpty()
   @IsString()
   description: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  price: number;
 }
