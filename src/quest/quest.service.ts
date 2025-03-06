@@ -131,6 +131,16 @@ export class QuestService {
     });
   }
 
+  async findByJiraId(jiraId: string) {
+    return this.prisma.quest.findFirst({
+      where: {
+        link: {
+          contains: jiraId, 
+        },
+      },
+    });
+  }
+
   // Mettre à jour le statut d'une quête
   async updateStatus(questId: number, status: string) {
     // Vous pouvez adapter la logique pour inclure d'autres validations

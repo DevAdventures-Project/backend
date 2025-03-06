@@ -8,20 +8,27 @@ import {
 } from "@nestjs/common";
 import { QuestService } from "../quest/quest.service";
 
+interface JiraWebhookBody {
+  issue: {
+    id: string;
+  };
+}
+
 @Controller("jira/webhook")
 export class JiraWebhookController {
   constructor(private readonly questService: QuestService) {}
 
   @Post()
   @HttpCode(HttpStatus.OK)
-  async webhook(@Body() body: unknown, @Headers() headers: unknown) {
-    // Here, you can verify the request if Jira sends a verification token
+  async webhook(@Body() body: JiraWebhookBody, @Headers() headers: unknown) {
+    const id = body.issue.id;
+    console.log(id);
+    const quest = await this.questService.findByJiraId(id);
+    if (quest) {
+      await this.questService.updateStatus(quest.id, "closed");
+    }
     console.log("Webhook received:", body);
     console.log("Headers:", headers);
-
-    // Process the webhook data in your service
-
-    // Respond with a success message
     return { status: "success" };
   }
 }
