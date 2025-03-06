@@ -20,7 +20,7 @@ export class JiraController {
   constructor() {
     this.jiraService = new JiraService();
   }
-
+  
   @Patch() // pass the ticket at done
   @ApiOkResponse()
   async update(@Body() { link }: JiraLinkToTicketDto) {
