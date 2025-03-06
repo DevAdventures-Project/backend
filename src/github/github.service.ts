@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import axios from "axios";
 
 @Injectable()
 export class GithubService {
@@ -23,16 +22,13 @@ export class GithubService {
   // Récupère la liste des dépôts de l'organisation
   async getRepos() {
     try {
-      const response = await axios.get(
-        `${this.baseUrl}/orgs/${this.org}/repos`,
-        {
-          headers: {
-            Authorization: `token ${this.token}`,
-            Accept: "application/vnd.github+json",
-          },
+      const response = await fetch(`${this.baseUrl}/orgs/${this.org}/repos`, {
+        headers: {
+          Authorization: `token ${this.token}`,
+          Accept: "application/vnd.github+json",
         },
-      );
-      return response.data;
+      });
+      return await response.json();
     } catch (error) {
       throw new HttpException(
         error.response?.data || "Error fetching repositories",
@@ -44,7 +40,7 @@ export class GithubService {
   // Récupère les issues pour un dépôt spécifique
   async getIssuesForRepo(repoName: string) {
     try {
-      const response = await axios.get(
+      const response = await fetch(
         `${this.baseUrl}/repos/${this.org}/${repoName}/issues`,
         {
           headers: {
@@ -53,7 +49,7 @@ export class GithubService {
           },
         },
       );
-      return response.data;
+      return await response.json();
     } catch (error) {
       throw new HttpException(
         error.response?.data || "Error fetching issues",
