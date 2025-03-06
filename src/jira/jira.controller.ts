@@ -24,7 +24,7 @@ export class JiraController {
   @Patch() // pass the ticket at done
   @ApiOkResponse()
   async update(@Body() { link }: JiraLinkToTicketDto) {
-    const urlJiraForTicket = `${process.env.JIRA_URL}${link}`;
+    const urlJiraForTicket = `${link}`;
     return await this.jiraService.update(urlJiraForTicket);
   }
 

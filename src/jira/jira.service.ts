@@ -61,7 +61,7 @@ export class JiraService {
     const tickets: JiraTicket[] = [];
     for (const ticket of json.issues) {
       tickets.push({
-        link: `/rest/api/3/issue/${ticket.id}/transitions`,
+        link: `${process.env.JIRA_URL}/rest/api/3/issue/${ticket.id}/transitions`,
         title: ticket.fields.summary,
         description: extractDescription(ticket.fields.description),
       });
