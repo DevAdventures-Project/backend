@@ -12,3 +12,47 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  pseudo    String
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Quest     Quest[]
+  Message   Message[]
+}
+
+model Quest {
+  id          Int      @id @default(autoincrement())
+  title       String
+  content     String
+  link        String
+  nbHelpers   Int
+  category    String
+  minimumRank String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    Int
+}
+
+model Item {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  content   String
+  authorId  Int
+  room      String // Exemple: "global" ou l'id d'une quête sous forme de chaîne
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author User @relation(fields: [authorId], references: [id])
+}
