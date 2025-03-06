@@ -31,6 +31,9 @@ export class QuestEntity implements Quest {
   status: string;
 
   @ApiProperty()
+  deadline: Date;
+
+  @ApiProperty()
   createdAt: Date;
 
   @ApiProperty()

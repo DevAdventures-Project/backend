@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsNotEmpty, IsString, IsUrl } from "class-validator";
+import {IsDate, IsInt, IsNotEmpty, IsString, IsUrl} from "class-validator";
 
 export class CreateQuestDto {
   @ApiProperty()
@@ -41,4 +41,9 @@ export class CreateQuestDto {
   @IsNotEmpty()
   @IsInt()
   authorId: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsDate()
+  deadline: Date;
 }
