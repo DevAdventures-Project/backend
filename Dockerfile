@@ -9,8 +9,6 @@ RUN pnpm install
 
 COPY . .
 
-RUN pnpm prisma generate
-
 RUN pnpm run build
 CMD ["nest", "start"]
 
