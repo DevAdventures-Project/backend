@@ -18,9 +18,9 @@ import { WebsocketsGateway } from "./ws/websockets.gateway";
     ItemsModule,
     ChatModule,
     AuthModule,
-    ScheduleModule.forRoot()
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
-  providers: [AppService, WebsocketsGateway]
+  providers: [AppService, WebsocketsGateway],
 })
 export class AppModule {}
