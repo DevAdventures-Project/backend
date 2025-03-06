@@ -12,15 +12,20 @@ export class ChatService {
     });
   }
 
-  async findAllByRoom(room: string) {
+  async findAllMessages() {
     return this.prisma.message.findMany({
-      where: { room },
       orderBy: { createdAt: "asc" },
       include: {
         author: {
           select: {
             id: true,
             pseudo: true,
+          },
+        },
+        quest: {
+          select: {
+            id: true,
+            title: true,
           },
         },
       },
