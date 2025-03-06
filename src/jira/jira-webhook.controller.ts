@@ -29,6 +29,7 @@ export class JiraWebhookController {
     }
     console.log("Webhook received:", body);
     console.log("Headers:", headers);
+    
     return { status: "success" };
   }
 }
