@@ -3,10 +3,10 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import type { JwtService } from "@nestjs/jwt";
+import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
-import type { PrismaService } from "../prisma/prisma.service";
-import type { AuthEntity } from "./entity/auth.entity";
+import { PrismaService } from "../prisma/prisma.service";
+import { AuthEntity } from "./entity/auth.entity";
 
 @Injectable()
 export class AuthService {
