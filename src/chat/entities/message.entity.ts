@@ -1,26 +1,26 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Message } from '@prisma/client';
+import { ApiProperty } from "@nestjs/swagger";
+import type { Message } from "@prisma/client";
 
 export class MessageEntity implements Message {
-    constructor(partial: Partial<MessageEntity>) {
-        Object.assign(this, partial);
-    }
+  constructor(partial: Partial<MessageEntity>) {
+    Object.assign(this, partial);
+  }
 
-    @ApiProperty()
-    id: number;
+  @ApiProperty()
+  id: number;
 
-    @ApiProperty()
-    content: string;
+  @ApiProperty()
+  content: string;
 
-    @ApiProperty()
-    authorId: number;
+  @ApiProperty()
+  authorId: number;
 
-    @ApiProperty()
-    room: string;
+  @ApiProperty()
+  room: string;
 
-    @ApiProperty()
-    createdAt: Date;
+  @ApiProperty()
+  createdAt: Date;
 
-    @ApiProperty()
-    updatedAt: Date;
+  @ApiProperty()
+  updatedAt: Date;
 }
