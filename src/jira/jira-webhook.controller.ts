@@ -28,6 +28,7 @@ export class JiraWebhookController {
     const id = body.issue.id;
     const urlJiraForTicket = `${process.env.JIRA_URL}rest/api/3/issue/${id}`;
     console.log(`Issue id:: ${id}`);
+    console.log(`UrlJiraForTicket:: ${urlJiraForTicket}`);
     const jiraTicket = await this.jiraService.getTicketById(urlJiraForTicket);
     console.log(`JiraTicket:: ${jiraTicket}`);
     if (jiraTicket.status === "Terminé(e)") {
