@@ -9,6 +9,7 @@ import { ItemsModule } from "./items/items.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { QuestModule } from "./quest/quest.module";
 import { UsersModule } from "./users/users.module";
+import { WebsocketsGateway } from "./ws/websockets.gateway";
 
 @Module({
   imports: [
@@ -22,6 +23,6 @@ import { UsersModule } from "./users/users.module";
     ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, WebsocketsGateway],
 })
 export class AppModule {}
