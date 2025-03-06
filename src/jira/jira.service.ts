@@ -16,6 +16,7 @@ export interface JiraTicketNoUrl {
   title: string;
   description: string;
   status: string;
+  id: string;
 }
 
 @Injectable()
@@ -28,6 +29,7 @@ export class JiraService {
   }
 
   async update(url: string) {
+    //rest/api/3/issue/${ticket.id}/transitions
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -65,9 +67,11 @@ export class JiraService {
     });
     const json = await data.json();
     const tickets: JiraTicket[] = [];
+
     for (const ticket of json.issues) {
       tickets.push({
-        link: `${process.env.JIRA_URL}rest/api/3/issue/${ticket.id}/transitions`,
+        //rest/api/3/issue/${ticket.id}/transitions
+        link: `${process.env.JIRA_URL}jira/software/projects/HACK/boards/2/backlog?selectedIssue=${ticket.key}`,
         title: ticket.fields.summary,
         description: extractDescription(ticket.fields.description),
       });
@@ -91,6 +95,7 @@ export class JiraService {
       title: title,
       description: description,
       status: status,
+      id: json.id,
     };
     return ticket;
   }

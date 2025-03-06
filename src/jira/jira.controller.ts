@@ -21,11 +21,20 @@ export class JiraController {
     this.jiraService = new JiraService();
   }
 
+  //https://hackathonjirajirajirajirajira.atlassian.net/rest/api/3/issue/10011/transitions
   @Patch() // pass the ticket at done
   @ApiOkResponse()
   async update(@Body() { link }: JiraLinkToTicketDto) {
-    const urlJiraForTicket = `${link}`;
-    return await this.jiraService.update(urlJiraForTicket);
+    const url = new URL(link);
+    const ticketKey = url.searchParams.get("selectedIssue");
+    if (!ticketKey) {
+      throw new Error("Invalid link");
+    }
+    const ticketDetail = await this.jiraService.getTicketById(
+      `${process.env.JIRA_URL}rest/api/3/issue/${ticketKey}`,
+    );
+    const urlToPatch = `${process.env.JIRA_URL}rest/api/3/issue/${ticketDetail.id}/transitions`;
+    return await this.jiraService.update(urlToPatch);
   }
 
   @Post(":id") //get ticket by id
