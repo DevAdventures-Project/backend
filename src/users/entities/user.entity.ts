@@ -1,6 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { User } from "@prisma/client";
-import { Exclude } from "class-transformer";
+import { User, Quest, Message, UserQuestRank } from "@prisma/client";
+import { Exclude, Type } from "class-transformer";
+import { QuestEntity } from "../../quest/entities/quest.entity";
+import { MessageEntity } from "../../chat/entities/message.entity";
+import { UserQuestRankEntity } from "./user-quest-rank.entity";
 
 export class UserEntity implements User {
   constructor(partial: Partial<UserEntity>) {
@@ -20,8 +23,27 @@ export class UserEntity implements User {
   password: string;
 
   @ApiProperty()
+  coins: number;
+
+  @ApiProperty()
   createdAt: Date;
 
   @ApiProperty()
   updatedAt: Date;
+
+  @ApiProperty({ type: [QuestEntity], description: "Quêtes créées par l'utilisateur" })
+  @Type(() => QuestEntity)
+  questsCreated?: Quest[];
+
+  @ApiProperty({ type: [QuestEntity], description: "Quêtes où l'utilisateur est helper" })
+  @Type(() => QuestEntity)
+  questsHelped?: Quest[];
+
+  @ApiProperty({ type: [MessageEntity], description: "Messages de l'utilisateur" })
+  @Type(() => MessageEntity)
+  messages?: Message[];
+
+  @ApiProperty({ type: [UserQuestRankEntity], description: "Ranks de l'utilisateur" })
+  @Type(() => UserQuestRankEntity)
+  ranks?: UserQuestRank[];
 }

@@ -34,6 +34,11 @@ export class UsersService {
   findOne(id: number) {
     return this.prisma.user.findUnique({
       where: { id },
+      include: {
+        questsCreated: true,  // Quêtes créées par l'utilisateur
+        questsHelped: true,   // Quêtes où il est helper
+        ranks: true,          // Ses ranks par catégorie
+      },
     });
   }
 

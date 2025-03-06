@@ -28,6 +28,9 @@ export class QuestEntity implements Quest {
   minimumRank: string;
 
   @ApiProperty()
+  status: string;
+
+  @ApiProperty()
   createdAt: Date;
 
   @ApiProperty()

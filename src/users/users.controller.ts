@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from "@nestjs/common";
 import {
@@ -32,6 +33,21 @@ export class UsersController {
   async create(@Body() createUserDto: CreateUserDto) {
     return new UserEntity(await this.usersService.create(createUserDto));
   }
+
+  // Route GET /users/profile pour obtenir le profil de l'utilisateur connecté
+  @Get("profile")
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserEntity })
+  async getProfile(@Req() req: any) {
+    // req.user est injecté par JwtAuthGuard et contient l'ID de l'utilisateur
+    const user = await this.usersService.findOne(req.user.id);
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+    return new UserEntity(user);
+  }
+
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
