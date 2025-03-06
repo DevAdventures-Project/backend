@@ -37,7 +37,7 @@ export class GithubWebhookController {
         const issueUrl = issue.html_url;
         const quest = await this.questService.findByIssueUrl(issueUrl);
         if (quest) {
-          await this.questService.updateStatus(quest.id, "cloturé");
+          await this.questService.updateStatus(quest.id, "closed");
         }
       }
     }
