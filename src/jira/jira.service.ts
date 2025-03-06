@@ -12,7 +12,7 @@ export interface JiraTicket {
   description: string;
 }
 
-export interface JiraTicketNoUrl{
+export interface JiraTicketNoUrl {
   title: string;
   description: string;
   status: string;
@@ -87,7 +87,11 @@ export class JiraService {
     const status = json.fields.status.name;
     const description = extractDescription(json.fields.description);
     const title = json.fields.summary;
-    const ticket: JiraTicketNoUrl = { title: title, description: description, status: status };
+    const ticket: JiraTicketNoUrl = {
+      title: title,
+      description: description,
+      status: status,
+    };
     return ticket;
   }
 

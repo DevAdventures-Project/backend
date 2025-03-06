@@ -30,7 +30,7 @@ export class JiraController {
 
   @Post(":id") //get ticket by id
   @ApiCreatedResponse()
-  async getOneTicketById(@Param("id") id:string) {
+  async getOneTicketById(@Param("id") id: string) {
     const urlJiraForTicket = `${process.env.JIRA_URL}rest/api/3/issue/${id}`;
     return await this.jiraService.getTicketById(urlJiraForTicket);
   }
