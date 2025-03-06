@@ -76,4 +76,20 @@ export class UsersService {
       where: { id },
     });
   }
+
+  async coinsRanking(): Promise<
+    { id: number; email: string; pseudo: string; coins: number }[]
+  > {
+    return this.prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        pseudo: true,
+        coins: true,
+      },
+      orderBy: {
+        coins: "desc",
+      },
+    });
+  }
 }

@@ -56,6 +56,12 @@ export class UsersController {
     return users.map((user) => new UserEntity(user));
   }
 
+  @Get("ranking")
+  @ApiOkResponse({ type: UserEntity, isArray: true })
+  async findRanking() {
+    return await this.usersService.coinsRanking();
+  }
+
   @Get(":id")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
