@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {IsDate, IsInt, IsNotEmpty, IsString, IsUrl} from "class-validator";
+import { IsDate, IsInt, IsNotEmpty, IsString, IsUrl } from "class-validator";
 
 export class CreateQuestDto {
   @ApiProperty()
