@@ -1,5 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Quest } from "@prisma/client";
 
 export class JiraEntity {
   @ApiProperty()

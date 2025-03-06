@@ -1,14 +1,5 @@
 import * as process from "node:process";
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Post,
-} from "@nestjs/common";
+import { Controller, Param, Patch, Post } from "@nestjs/common";
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import axios from "axios";
 import { JiraService } from "./jira.service";
