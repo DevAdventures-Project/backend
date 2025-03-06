@@ -1,4 +1,6 @@
 import {
+  ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   SubscribeMessage,
@@ -16,22 +18,27 @@ export class WebsocketsGateway
   @WebSocketServer() io: Server;
 
   @SubscribeMessage("message")
-  handleMessage(client: Socket, data: string): WsResponse<string> {
+  handleMessage(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: string,
+  ): WsResponse<string> {
+    console.log("message", client.rooms);
     const clientMapRooms = this.getClientMapRooms(client);
     console.log(
       `Client with id ${client.id} sent message ${data} to rooms ${clientMapRooms}`,
     );
     clientMapRooms.forEach((room: string) => {
-      client.to(room).emit("message", data);
+      console.log(`Sending message to room ${room}`);
+      console.log(client.to(room).emit("message", data));
     });
     return {
-      event: "sentMessage",
-      data: "true",
+      event: "message",
+      data,
     };
   }
 
   @SubscribeMessage("joinRoom")
-  handleJoinRoom(client: Socket, room: string) {
+  async handleJoinRoom(client: Socket, room: string) {
     console.log(`Client with id ${client.id} joined room ${room}`);
     const clientMapRooms = this.getClientMapRooms(client);
     if (clientMapRooms.length > 0 && this.maps.includes(room))
@@ -39,23 +46,24 @@ export class WebsocketsGateway
         event: "joinedRoom",
         data: "Already in a map room",
       };
-    client.join(room);
+    await client.join(room);
+    console.log("joinRoom", client.rooms);
     client.emit("joinedRoom", room);
   }
 
   @SubscribeMessage("leaveRooms")
-  handleLeaveRooms(client: Socket) {
+  async handleLeaveRooms(client: Socket) {
     console.log(`Client with id ${client.id} left all rooms`);
-    client.rooms.forEach((room: string) => {
-      client.leave(room);
-    });
+    await Promise.all(
+      Array.from(client.rooms).map((room: string) => client.leave(room)),
+    );
     client.emit("leftRooms", true);
   }
 
   @SubscribeMessage("leaveRoom")
-  handleLeaveRoom(client: Socket, room: string) {
+  async handleLeaveRoom(client: Socket, room: string) {
     console.log(`Client with id ${client.id} left room ${room}`);
-    client.leave(room);
+    await client.leave(room);
     client.emit("leftRoom", room);
   }
 
@@ -74,11 +82,13 @@ export class WebsocketsGateway
     };
   }
 
-  handleConnection(socket: WebSocket) {
+  handleConnection(client: Socket) {
+    client.join("HUB");
     console.log("New connection");
   }
 
-  handleDisconnect(socket: WebSocket) {
+  handleDisconnect(client: Socket) {
+    this.handleLeaveRooms(client);
     console.log("Disconnected");
   }
 
