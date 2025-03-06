@@ -9,6 +9,6 @@ RUN pnpm install
 COPY . .
 
 RUN pnpm run build
-CMD ["pnpm", "prisma", "deploy", "&&", "pnpm", "start:prod"]
+CMD ["pnpm", "run", "prisma:deploy", "&&", "pnpm", "run", "start:prod"]
 
 
