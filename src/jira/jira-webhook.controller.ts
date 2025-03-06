@@ -24,24 +24,20 @@ export class JiraWebhookController {
 
   @Post()
   @HttpCode(HttpStatus.OK)
-  async webhook(@Body() body: JiraWebhookBody, @Headers() headers: unknown) {
+  // biome-ignore lint/suspicious/noExplicitAny: easier
+  async webhook(@Body() body: any, @Headers() headers: unknown) {
     const id = body.issue.id;
     const urlJiraForTicket = `${process.env.JIRA_URL}rest/api/3/issue/${id}`;
     console.log(`Issue id:: ${id}`);
     console.log(`UrlJiraForTicket:: ${urlJiraForTicket}`);
     const jiraTicket = await this.jiraService.getTicketById(urlJiraForTicket);
     console.log(`JiraTicket:: ${jiraTicket}`);
-    if (jiraTicket.status === "Terminé(e)") {
-      const quest = await this.questService.findByJiraId(id);
-      console.log(`Quest:: ${quest}`);
-      if (quest) {
-        await this.questService.updateStatus(quest.id, "closed");
-      }
-      return { status: "success" };
+    //jiraTicket.status === "Terminé(e)") {
+    const quest = await this.questService.findByJiraId(id);
+    console.log(`Quest:: ${quest}`);
+    if (quest) {
+      await this.questService.updateStatus(quest.id, "closed");
     }
-    console.log("Webhook received:", body);
-    console.log("Headers:", headers);
-
-    return { status: "fail" };
+    return { status: "success" };
   }
 }
