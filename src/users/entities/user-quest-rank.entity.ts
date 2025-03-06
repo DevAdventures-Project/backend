@@ -2,28 +2,28 @@ import { ApiProperty } from "@nestjs/swagger";
 import { UserQuestRank } from "@prisma/client";
 
 export class UserQuestRankEntity implements UserQuestRank {
-    constructor(partial: Partial<UserQuestRankEntity>) {
-        Object.assign(this, partial);
-    }
+  constructor(partial: Partial<UserQuestRankEntity>) {
+    Object.assign(this, partial);
+  }
 
-    @ApiProperty()
-    id: number;
+  @ApiProperty()
+  id: number;
 
-    @ApiProperty()
-    rank: string;
+  @ApiProperty()
+  rank: string;
 
-    @ApiProperty()
-    rankValue: number;
+  @ApiProperty()
+  rankValue: number;
 
-    @ApiProperty()
-    category: string;
+  @ApiProperty()
+  category: string;
 
-    @ApiProperty()
-    createdAt: Date;
+  @ApiProperty()
+  createdAt: Date;
 
-    @ApiProperty()
-    updatedAt: Date;
+  @ApiProperty()
+  updatedAt: Date;
 
-    @ApiProperty()
-    userId: number;
+  @ApiProperty()
+  userId: number;
 }

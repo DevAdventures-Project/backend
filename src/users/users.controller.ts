@@ -17,6 +17,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { User } from "@prisma/client";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
@@ -39,7 +40,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
-  async getProfile(@Req() req: any) {
+  async getProfile(@Req() req: { user: User }) {
     // req.user est injecté par JwtAuthGuard et contient l'ID de l'utilisateur
     const user = await this.usersService.findOne(req.user.id);
     if (!user) {
@@ -47,7 +48,6 @@ export class UsersController {
     }
     return new UserEntity(user);
   }
-
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
