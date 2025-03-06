@@ -14,14 +14,22 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
   pseudo    String
   password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Quest     Quest[]
-  Message   Message[]
+  coins     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Quêtes créées par l'utilisateur (relation one-to-many)
+  questsCreated Quest[]
+
+  // Quêtes où l'utilisateur est helper (relation many-to-many)
+  questsHelped Quest[] @relation("QuestHelpers")
+
+  messages Message[]
+  ranks    UserQuestRank[]
 }
 
 model Quest {
@@ -34,8 +42,24 @@ model Quest {
   minimumRank String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  author      User     @relation(fields: [authorId], references: [id])
-  authorId    Int
+
+  // Auteur de la quête (relation one-to-many)
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
+
+  // Helpers de la quête (relation many-to-many)
+  helpers User[] @relation("QuestHelpers")
+}
+
+model UserQuestRank {
+  id        Int      @id @default(autoincrement())
+  rank      String
+  rankValue Int
+  category  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
 }
 
 model Item {
