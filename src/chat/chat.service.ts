@@ -16,6 +16,14 @@ export class ChatService {
     return this.prisma.message.findMany({
       where: { room },
       orderBy: { createdAt: "asc" },
+      include: {
+        author: {
+          select: {
+            id: true,
+            pseudo: true,
+          },
+        },
+      },
     });
   }
 }
