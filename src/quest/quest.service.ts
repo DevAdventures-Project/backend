@@ -56,6 +56,35 @@ export class QuestService {
     });
   }
 
+  // Désinscription d'une quête
+  async unregisterFromQuest(questId: number, userId: number) {
+    // Vérifier si l'utilisateur existe
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!user) {
+      throw new NotFoundException(`User with id ${userId} not found`);
+    }
+
+    // Vérifier si la quête existe
+    const quest = await this.prisma.quest.findUnique({
+      where: { id: questId },
+    });
+    if (!quest) {
+      throw new NotFoundException(`Quest with id ${questId} not found`);
+    }
+
+    // Déconnecter l'utilisateur de la relation "helpers"
+    return this.prisma.quest.update({
+      where: { id: questId },
+      data: {
+        helpers: {
+          disconnect: { id: userId },
+        },
+      },
+    });
+  }
+
   findAll() {
     return this.prisma.quest.findMany({
       include: {
