@@ -18,7 +18,7 @@ export class MessageEntity implements Message {
   authorId: number;
 
   @ApiProperty()
-  questId: number;
+  questId: number | null;
 
   @ApiProperty()
   createdAt: Date;

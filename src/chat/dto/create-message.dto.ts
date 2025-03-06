@@ -15,7 +15,6 @@ export class CreateMessageDto {
   @ApiProperty({
     description: "Identifiant de la quête à laquelle le message est associé",
   })
-  @IsNotEmpty()
   @IsInt()
-  questId: number;
+  questId?: number | null;
 }
