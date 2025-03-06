@@ -7,5 +7,6 @@ import { QuestService } from "./quest.service";
   controllers: [QuestController],
   providers: [QuestService],
   imports: [PrismaModule],
+  exports: [QuestService],
 })
 export class QuestModule {}
