@@ -1,11 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Quest } from "@prisma/client";
 
-export class QuestEntity implements Quest {
-  constructor(partial: Partial<QuestEntity>) {
-    Object.assign(this, partial);
-  }
-
+export class JiraEntity {
   @ApiProperty()
   id: number;
 
@@ -29,9 +24,6 @@ export class QuestEntity implements Quest {
 
   @ApiProperty()
   status: string;
-
-  @ApiProperty()
-  deadline: Date;
 
   @ApiProperty()
   createdAt: Date;

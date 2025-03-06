@@ -41,6 +41,7 @@ model Quest {
   category    String
   minimumRank String
   status      String
+  deadline    DateTime
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
