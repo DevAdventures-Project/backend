@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-
 export class JiraEntity {
   @ApiProperty()
   id: number;
