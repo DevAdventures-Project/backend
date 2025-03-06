@@ -60,6 +60,17 @@ export class UsersService {
     });
   }
 
+  async updateCoins(id: number, coins: number) {
+    return this.prisma.user.update({
+      where: { id },
+      data: {
+        coins: {
+          increment: coins,
+        },
+      },
+    });
+  }
+
   async remove(id: number) {
     return this.prisma.user.delete({
       where: { id },

@@ -1,3 +1,4 @@
+import { randomInt } from "node:crypto";
 import {
   Body,
   Controller,
@@ -6,20 +7,16 @@ import {
   HttpStatus,
   Post,
 } from "@nestjs/common";
+import { UsersService } from "src/users/users.service";
 import { QuestService } from "../quest/quest.service";
 import { JiraService } from "./jira.service";
-
-interface JiraWebhookBody {
-  issue: {
-    id: string;
-  };
-}
 
 @Controller("jira/webhook")
 export class JiraWebhookController {
   constructor(
     private readonly questService: QuestService,
     private readonly jiraService: JiraService,
+    private readonly userService: UsersService,
   ) {}
 
   @Post()
@@ -37,6 +34,10 @@ export class JiraWebhookController {
     console.log(`Quest:: ${quest}`);
     if (quest) {
       await this.questService.updateStatus(quest.id, "closed");
+      const randomValue = randomInt(10, 100);
+      for (const helper of quest.helpers) {
+        await this.userService.updateCoins(helper.id, randomValue);
+      }
     }
     return { status: "success" };
   }
