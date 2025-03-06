@@ -1,10 +1,24 @@
-import { ClassSerializerInterceptor, ValidationPipe } from "@nestjs/common";
+import { ClassSerializerInterceptor, LogLevel, ValidationPipe } from "@nestjs/common";
 import { NestFactory, Reflector } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+
+  const allLogLevels: LogLevel[] = [
+    "verbose",
+    "debug",
+    "log",
+    "warn",
+    "error",
+    "fatal",
+  ];
+  const levels = allLogLevels.slice(
+    allLogLevels.indexOf((process.env.NESTJS_LOG_LEVEL || "debug") as LogLevel),
+    allLogLevels.length,
+  );
+
+  const app = await NestFactory.create(AppModule, { logger: levels });
 
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
