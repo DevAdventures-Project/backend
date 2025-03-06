@@ -13,10 +13,9 @@ export class CreateMessageDto {
   authorId: number;
 
   @ApiProperty({
-    description:
-      'Identifiant de la room (ex. "global" pour le chat global ou l’id d’une quête)',
+    description: "Identifiant de la quête à laquelle le message est associé",
   })
   @IsNotEmpty()
-  @IsString()
-  room: string;
+  @IsInt()
+  questId: number;
 }
