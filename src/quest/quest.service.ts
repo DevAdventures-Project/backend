@@ -157,6 +157,9 @@ export class QuestService {
   async findByIssueUrl(issueUrl: string) {
     return this.prisma.quest.findFirst({
       where: { link: issueUrl },
+      include: {
+        helpers: true,
+      },
     });
   }
 
@@ -166,6 +169,9 @@ export class QuestService {
         link: {
           contains: jiraId,
         },
+      },
+      include: {
+        helpers: true,
       },
     });
   }
