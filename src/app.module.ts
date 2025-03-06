@@ -5,10 +5,10 @@ import { AppService } from "./app.service";
 import { AuthModule } from "./auth/auth.module";
 import { ChatModule } from "./chat/chat.module";
 import { ItemsModule } from "./items/items.module";
+import { JiraModule } from "./jira/jira.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { QuestModule } from "./quest/quest.module";
 import { UsersModule } from "./users/users.module";
-import { JiraModule } from "./jira/jira.module";
 
 @Module({
   imports: [

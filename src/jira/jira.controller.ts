@@ -1,3 +1,4 @@
+import * as process from "node:process";
 import {
   Body,
   Controller,
@@ -8,10 +9,9 @@ import {
   Patch,
   Post,
 } from "@nestjs/common";
-import axios from "axios";
-import * as process from "node:process";
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
-import { JiraService } from './jira.service';
+import axios from "axios";
+import { JiraService } from "./jira.service";
 
 @ApiTags("jira")
 @Controller("jira")
@@ -23,35 +23,38 @@ export class JiraController {
 
   @Patch(":id")
   @ApiOkResponse()
-  async update(@Param('id') id: string, @Body() body: any) {
+  async update(@Param("id") id: string) {
     const urlJiraForTicket = `${process.env.JIRA_URL}/rest/api/3/issue/${id}/transitions`;
     return await this.jiraService.update(urlJiraForTicket);
   }
+
   @Post()
   @ApiCreatedResponse()
   async create() {
-    const auth = Buffer.from(`${process.env.JIRA_EMAIL}:${process.env.JIRA_TOKEN}`).toString('base64');
+    const auth = Buffer.from(
+      `${process.env.JIRA_EMAIL}:${process.env.JIRA_TOKEN}`,
+    ).toString("base64");
 
     axios.post(
-      process.env.JIRA_URL+'/rest/api/3/issue', 
+      `${process.env.JIRA_URL}/rest/api/3/issue`,
       {
         fields: {
           project: {
-            key: 'SCRUM',
+            key: "SCRUM",
           },
-          summary: 'New issue created via API',
-          description: 'This is a description of the new issue.',
+          summary: "New issue created via API",
+          description: "This is a description of the new issue.",
           issuetype: {
-            name: 'Task',
-          }
-        }
+            name: "Task",
+          },
+        },
       },
       {
         headers: {
-          'Authorization': `Basic ${auth}`,  // Pass the authorization header with base64-encoded email and API token
-          'Content-Type': 'application/json', // Set content type to JSON
-        }
-      }
-    )
+          Authorization: `Basic ${auth}`, // Pass the authorization header with base64-encoded email and API token
+          "Content-Type": "application/json", // Set content type to JSON
+        },
+      },
+    );
   }
 }
