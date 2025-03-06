@@ -93,7 +93,6 @@ export class JiraService {
       },
     });
     const json = await response.json();
-    console.log(json);
     const projects: JiraProject[] = [];
     for (const project of json) {
       projects.push({
