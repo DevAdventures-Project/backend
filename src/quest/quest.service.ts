@@ -135,7 +135,7 @@ export class QuestService {
     return this.prisma.quest.findFirst({
       where: {
         link: {
-          contains: jiraId, 
+          contains: jiraId,
         },
       },
     });
