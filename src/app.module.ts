@@ -8,6 +8,7 @@ import { ItemsModule } from "./items/items.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { QuestModule } from "./quest/quest.module";
 import { UsersModule } from "./users/users.module";
+import {GithubModule} from "./github/github.module";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { UsersModule } from "./users/users.module";
     QuestModule,
     ItemsModule,
     ChatModule,
+    GithubModule,
     AuthModule,
     ScheduleModule.forRoot(),
   ],
