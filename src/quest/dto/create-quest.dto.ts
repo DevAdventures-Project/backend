@@ -30,6 +30,11 @@ export class CreateQuestDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
+  status: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
   minimumRank: string;
 
   @ApiProperty()
