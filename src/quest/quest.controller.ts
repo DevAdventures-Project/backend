@@ -26,6 +26,17 @@ export class QuestController {
     return new QuestEntity(quest);
   }
 
+  //user register to a quest
+  @Post(":id/register/:userId")
+  @ApiCreatedResponse({ type: QuestEntity })
+  async registerToQuest(
+    @Param("id", ParseIntPipe) questId: number,
+    @Param("userId", ParseIntPipe) userId: number,
+  ) {
+    const quest = await this.questService.registerToQuest(questId, userId);
+    return new QuestEntity(quest);
+  }
+
   @Get()
   @ApiOkResponse({ type: QuestEntity, isArray: true })
   async findAll() {

@@ -49,8 +49,6 @@ export class UsersController {
     return new UserEntity(user);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Get()
   @ApiOkResponse({ type: UserEntity, isArray: true })
   async findAll() {
