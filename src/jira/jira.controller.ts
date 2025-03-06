@@ -10,7 +10,7 @@ import {
   Post,
 } from "@nestjs/common";
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
-import axios from "axios";
+import { JiraLinkToTicketDto } from "./dto/jira.dto";
 import { JiraService } from "./jira.service";
 
 @ApiTags("jira")
@@ -21,40 +21,33 @@ export class JiraController {
     this.jiraService = new JiraService();
   }
 
-  @Patch(":id")
+  @Patch() // pass the ticket at done
   @ApiOkResponse()
-  async update(@Param("id") id: string) {
-    const urlJiraForTicket = `${process.env.JIRA_URL}/rest/api/3/issue/${id}/transitions`;
+  async update(@Body() { link }: JiraLinkToTicketDto) {
+    const urlJiraForTicket = `${process.env.JIRA_URL}${link}`;
     return await this.jiraService.update(urlJiraForTicket);
   }
 
-  @Post()
+  @Post() //get ticket by id
   @ApiCreatedResponse()
-  async create() {
-    const auth = Buffer.from(
-      `${process.env.JIRA_EMAIL}:${process.env.JIRA_TOKEN}`,
-    ).toString("base64");
+  async create(@Param("id") id) {
+    const urlJiraForTicket = `${process.env.JIRA_URL}/rest/api/3/issue/${id}`;
+    return await this.jiraService.getDataTicketId(urlJiraForTicket);
+  }
 
-    axios.post(
-      `${process.env.JIRA_URL}/rest/api/3/issue`,
-      {
-        fields: {
-          project: {
-            key: "SCRUM",
-          },
-          summary: "New issue created via API",
-          description: "This is a description of the new issue.",
-          issuetype: {
-            name: "Task",
-          },
-        },
-      },
-      {
-        headers: {
-          Authorization: `Basic ${auth}`, // Pass the authorization header with base64-encoded email and API token
-          "Content-Type": "application/json", // Set content type to JSON
-        },
-      },
-    );
+  @Get(":id")
+  @ApiCreatedResponse()
+  async getOne(@Param("id") id: string) {
+    const jql = `project="${id}" AND status != "Done"`;
+    const urlJiraForTicketOfProject = `${process.env.JIRA_URL}/rest/api/3/search`;
+    const fullUrl = `${urlJiraForTicketOfProject}?jql=${encodeURIComponent(jql)}`;
+    return await this.jiraService.getDataTicketProjectId(fullUrl);
+  }
+
+  @Get()
+  @ApiCreatedResponse()
+  async getAllProject() {
+    const urlJiraForTicket = `${process.env.JIRA_URL}/rest/api/3/project`;
+    return await this.jiraService.getAllProject(urlJiraForTicket);
   }
 }
