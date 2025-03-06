@@ -7,8 +7,17 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Req,
+  UseGuards,
 } from "@nestjs/common";
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from "@nestjs/swagger";
+import { User } from "@prisma/client";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { CreateQuestDto } from "./dto/create-quest.dto";
 import { UpdateQuestDto } from "./dto/update-quest.dto";
 import { QuestEntity } from "./entities/quest.entity";
@@ -26,14 +35,32 @@ export class QuestController {
     return new QuestEntity(quest);
   }
 
-  //user register to a quest
-  @Post(":id/register/:userId")
+  // Inscription à une quête via le token
+  @Post(":id/register")
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiCreatedResponse({ type: QuestEntity })
   async registerToQuest(
     @Param("id", ParseIntPipe) questId: number,
-    @Param("userId", ParseIntPipe) userId: number,
+    @Req() req: { user: User },
   ) {
-    const quest = await this.questService.registerToQuest(questId, userId);
+    const quest = await this.questService.registerToQuest(questId, req.user.id);
+    return new QuestEntity(quest);
+  }
+
+  // Désinscription d'une quête via le token
+  @Delete(":id/unregister")
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: QuestEntity })
+  async unregisterFromQuest(
+    @Param("id", ParseIntPipe) questId: number,
+    @Req() req: { user: User },
+  ) {
+    const quest = await this.questService.unregisterFromQuest(
+      questId,
+      req.user.id,
+    );
     return new QuestEntity(quest);
   }
 
