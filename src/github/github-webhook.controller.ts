@@ -1,3 +1,4 @@
+import { randomInt } from "node:crypto";
 import {
   Body,
   Controller,
@@ -6,13 +7,13 @@ import {
   HttpStatus,
   Post,
 } from "@nestjs/common";
+import { UsersService } from "src/users/users.service";
 import { QuestService } from "../quest/quest.service";
 
 interface GithubIssue {
   html_url: string;
   number: number;
   title: string;
-  // Ajoutez d'autres propriétés si nécessaire
 }
 
 interface GithubIssueWebhookPayload {
@@ -22,7 +23,10 @@ interface GithubIssueWebhookPayload {
 
 @Controller("github/webhooks")
 export class GithubWebhookController {
-  constructor(private readonly questService: QuestService) {}
+  constructor(
+    private readonly questService: QuestService,
+    private readonly userService: UsersService,
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.OK)
@@ -38,6 +42,10 @@ export class GithubWebhookController {
         const quest = await this.questService.findByIssueUrl(issueUrl);
         if (quest) {
           await this.questService.updateStatus(quest.id, "closed");
+          const randomValue = randomInt(10, 100);
+          for (const helper of quest.helpers) {
+            await this.userService.updateCoins(helper.id, randomValue);
+          }
         }
       }
     }
