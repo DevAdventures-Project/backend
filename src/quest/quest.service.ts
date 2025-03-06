@@ -14,12 +14,29 @@ export class QuestService {
   }
 
   findAll() {
-    return this.prisma.quest.findMany();
+    return this.prisma.quest.findMany({
+      include: {
+        author: {
+          select: {
+            id: true,
+            pseudo: true,
+          },
+        },
+      },
+    });
   }
 
   async findOne(id: number) {
     const quest = await this.prisma.quest.findUnique({
       where: { id },
+      include: {
+        author: {
+          select: {
+            id: true,
+            pseudo: true,
+          },
+        },
+      },
     });
     if (!quest) {
       throw new NotFoundException(`Quest with id ${id} not found`);
@@ -31,6 +48,14 @@ export class QuestService {
   async findByCategory(category: string) {
     const quests = await this.prisma.quest.findMany({
       where: { category },
+      include: {
+        author: {
+          select: {
+            id: true,
+            pseudo: true,
+          },
+        },
+      },
     });
     if (!quests.length) {
       throw new NotFoundException(`Quest with category ${category} not found`);

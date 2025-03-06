@@ -4,6 +4,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AuthModule } from "./auth/auth.module";
 import { ChatModule } from "./chat/chat.module";
+import { GithubModule } from "./github/github.module";
 import { ItemsModule } from "./items/items.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { QuestModule } from "./quest/quest.module";
@@ -17,6 +18,7 @@ import { WebsocketsGateway } from "./ws/websockets.gateway";
     QuestModule,
     ItemsModule,
     ChatModule,
+    GithubModule,
     AuthModule,
     ScheduleModule.forRoot(),
   ],
