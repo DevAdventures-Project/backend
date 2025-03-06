@@ -22,8 +22,9 @@ export class JiraWebhookController {
   @HttpCode(HttpStatus.OK)
   async webhook(@Body() body: JiraWebhookBody, @Headers() headers: unknown) {
     const id = body.issue.id;
-    console.log(id);
+    console.log("Issue id:: "+id);
     const quest = await this.questService.findByJiraId(id);
+    console.log("Quest:: "+quest);
     if (quest) {
       await this.questService.updateStatus(quest.id, "closed");
     }
