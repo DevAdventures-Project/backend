@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Post,
 } from "@nestjs/common";
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { UsersService } from "src/users/users.service";
 import { QuestService } from "../quest/quest.service";
 import { JiraService } from "./jira.service";
@@ -40,10 +41,10 @@ export class JiraWebhookController {
         for (const helper of quest.helpers) {
           await this.userService.updateCoins(helper.id, randomValue);
         }
-        return { status: "success" };
+        return true;
       }
     }
 
-    return { status: "fail" };
+    return false;
   }
 }
