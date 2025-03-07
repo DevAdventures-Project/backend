@@ -131,9 +131,13 @@ export class QuestService {
   }
 
   //find by category
-  async findByCategory(category: string) {
+  async findByCategory(category: string, status?: string) {
+    const filter = status ? { status } : {};
     const quests = await this.prisma.quest.findMany({
-      where: { category },
+      where: {
+        category,
+        ...filter,
+      },
       include: {
         author: {
           select: {
