@@ -24,6 +24,7 @@ export class JiraWebhookController {
   // biome-ignore lint/suspicious/noExplicitAny: easier
   async webhook(@Body() body: any, @Headers() headers: unknown) {
     const id = body.issue.id;
+    const key = body.issue.key;
     console.log(`Issue id:: ${id}`);
 
     const urlJiraForTicket = `${process.env.JIRA_URL}rest/api/3/issue/${id}`;
@@ -31,7 +32,7 @@ export class JiraWebhookController {
     console.log(`JiraTicket:: ${jiraTicket}`);
 
     if (jiraTicket.status === "Terminé(e)") {
-      const quest = await this.questService.findByJiraId(id);
+      const quest = await this.questService.findByJiraKey(key);
       console.log(`Quest:: ${quest}`);
       if (quest) {
         await this.questService.updateStatus(quest.id, "closed");
