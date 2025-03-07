@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Post,
 } from "@nestjs/common";
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { UsersService } from "src/users/users.service";
 import { QuestService } from "../quest/quest.service";
 import { JiraService } from "./jira.service";
@@ -20,7 +21,7 @@ export class JiraWebhookController {
   ) {}
 
   @Post()
-  @HttpCode(HttpStatus.OK)
+  @ApiCreatedResponse()
   // biome-ignore lint/suspicious/noExplicitAny: easier
   async webhook(@Body() body: any, @Headers() headers: unknown) {
     const id = body.issue.id;
