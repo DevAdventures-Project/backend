@@ -8,7 +8,7 @@
     "start": "pnpm prisma generate && nest start",
     "dev": "pnpm prisma generate && nest start --watch",
     "start:debug": "pnpm prisma generate && nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/src/main",
     "lint": "biome check --write --unsafe",
     "typecheck": "tsc --noEmit --skipLibCheck",
     "prisma:deploy": "pnpm prisma migrate deploy",
