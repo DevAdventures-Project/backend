@@ -13,7 +13,7 @@ import { Server, Socket } from "socket.io";
 export class WebsocketsGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
-  maps = ["HUB", "Cobol", 'Javascript', 'Scratch'];
+  maps = ["HUB", "Cobol", "Javascript", "Scratch"];
   players = new Map<string, string>();
 
   @WebSocketServer() io: Server;
@@ -41,12 +41,16 @@ export class WebsocketsGateway
   @SubscribeMessage("joinRoom")
   async handleJoinRoom(client: Socket, room: string) {
     const player = this.players.get(client.id);
-    if(!player) return;
+    if (!player) return;
     console.log(`Client with id ${client.id} joined room ${room}`);
     const clientMapRooms = this.getClientMapRooms(client);
-    switch(room) {
+    switch (room) {
       case "HUB":
-        this.updatePlayerPosition(client, {...JSON.parse(player),x: 410, y: 402 });
+        this.updatePlayerPosition(client, {
+          ...JSON.parse(player),
+          x: 410,
+          y: 402,
+        });
         break;
     }
     await client.join(room);
@@ -61,7 +65,7 @@ export class WebsocketsGateway
       Array.from(client.rooms).map((room: string) => client.leave(room)),
     );
     const player = this.players.get(client.id);
-    if(!player) return;
+    if (!player) return;
     this.io.sockets.emit("leftRooms", player);
   }
 
@@ -80,14 +84,17 @@ export class WebsocketsGateway
       `Client with id ${client.id} sent position ${data} to rooms ${clientMapRooms}`,
     );
     const player = this.players.get(client.id);
-    if (!player) return {
-      event: "sentPosition",
-      data: "false",
-    }
+    if (!player)
+      return {
+        event: "sentPosition",
+        data: "false",
+      };
     const playerParsed = JSON.parse(player);
     const dataParsed = JSON.parse(data);
     clientMapRooms.forEach((room: string) => {
-      client.to(room).emit("position", JSON.stringify({...playerParsed, ...dataParsed}));
+      client
+        .to(room)
+        .emit("position", JSON.stringify({ ...playerParsed, ...dataParsed }));
     });
     this.updatePlayerPosition(client, data);
     return {
@@ -109,8 +116,17 @@ export class WebsocketsGateway
   handleGetOtherPlayers(client: Socket) {
     const mapRoom = this.getClientMapRooms(client)[0];
     const otherPlayers = this.getPlayersOnMap(mapRoom);
-    console.log(JSON.stringify(otherPlayers.filter((player) => player !== this.players.get(client.id))))
-    client.emit("otherPlayers", JSON.stringify(otherPlayers.filter((player) => player !== this.players.get(client.id))));
+    console.log(
+      JSON.stringify(
+        otherPlayers.filter((player) => player !== this.players.get(client.id)),
+      ),
+    );
+    client.emit(
+      "otherPlayers",
+      JSON.stringify(
+        otherPlayers.filter((player) => player !== this.players.get(client.id)),
+      ),
+    );
   }
 
   @SubscribeMessage("joinQuestRoom")
@@ -168,7 +184,7 @@ export class WebsocketsGateway
 
   handleDisconnect(client: Socket) {
     const player = this.players.get(client.id);
-    if(!player) return;
+    if (!player) return;
     this.io.sockets.emit("leftRooms", player);
     this.players.delete(client.id);
     console.log("Disconnected");
@@ -181,12 +197,14 @@ export class WebsocketsGateway
   }
 
   private getPlayersOnMap(map: string) {
-    return Array.from(this.players).filter(
-      ([clientId, _]) => {
+    return Array.from(this.players)
+      .filter(([clientId, _]) => {
         const clientSocket = this.io.sockets.sockets.get(clientId);
-        return clientSocket ? this.getClientMapRooms(clientSocket).includes(map) : false;
-      },
-    ).map(([_, player]) => player);
+        return clientSocket
+          ? this.getClientMapRooms(clientSocket).includes(map)
+          : false;
+      })
+      .map(([_, player]) => player);
   }
 
   private updatePlayerPosition(client: Socket, data: string) {
@@ -194,6 +212,9 @@ export class WebsocketsGateway
     if (!player) return;
     const playerParsed = JSON.parse(player);
     const positions = JSON.parse(data);
-    this.players.set(client.id, JSON.stringify({ ...playerParsed, ...positions }));
+    this.players.set(
+      client.id,
+      JSON.stringify({ ...playerParsed, ...positions }),
+    );
   }
 }
