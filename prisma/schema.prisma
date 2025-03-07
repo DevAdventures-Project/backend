@@ -14,30 +14,25 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  pseudo    String
-  password  String
-  coins     Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Quêtes créées par l'utilisateur (relation one-to-many)
+  id            Int             @id @default(autoincrement())
+  email         String          @unique
+  pseudo        String
+  password      String
+  coins         Int             @default(0)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   questsCreated Quest[]
-
-  // Quêtes où l'utilisateur est helper (relation many-to-many)
-  questsHelped Quest[] @relation("QuestHelpers")
-
-  messages  Message[]
-  ranks     UserQuestRank[]
-  inventory UserItem[] // Inventaire du joueur
+  questsHelped  Quest[]         @relation("QuestHelpers")
+  messages      Message[]
+  ranks         UserQuestRank[]
+  inventory     UserItem[]
 }
 
 model Item {
   id          Int      @id @default(autoincrement())
   name        String
   description String
-  price       Int // Prix de l'item en coins
+  price       Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -56,7 +51,7 @@ model UserItem {
 }
 
 model Quest {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
   content     String
   link        String
@@ -65,15 +60,12 @@ model Quest {
   minimumRank String
   status      String
   deadline    DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Auteur de la quête (relation one-to-many)
-  author   User @relation(fields: [authorId], references: [id])
-  authorId Int
-
-  // Helpers de la quête (relation many-to-many)
-  helpers User[] @relation("QuestHelpers")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    Int
+  helpers     User[]    @relation("QuestHelpers")
+  Message     Message[]
 }
 
 model UserQuestRank {
@@ -91,9 +83,9 @@ model Message {
   id        Int      @id @default(autoincrement())
   content   String
   authorId  Int
-  room      String // Exemple: "global" ou l'id d'une quête sous forme de chaîne
+  questId   Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  author User @relation(fields: [authorId], references: [id])
+  author    User     @relation(fields: [authorId], references: [id])
+  quest     Quest?   @relation(fields: [questId], references: [id])
 }

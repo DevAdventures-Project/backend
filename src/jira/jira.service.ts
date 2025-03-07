@@ -12,6 +12,13 @@ export interface JiraTicket {
   description: string;
 }
 
+export interface JiraTicketNoUrl {
+  title: string;
+  description: string;
+  status: string;
+  id: string;
+}
+
 @Injectable()
 export class JiraService {
   token: string;
@@ -59,9 +66,10 @@ export class JiraService {
     });
     const json = await data.json();
     const tickets: JiraTicket[] = [];
+
     for (const ticket of json.issues) {
       tickets.push({
-        link: `/rest/api/3/issue/${ticket.id}/transitions`,
+        link: `${process.env.JIRA_URL}jira/software/projects/HACK/boards/2/backlog?selectedIssue=${ticket.key}`,
         title: ticket.fields.summary,
         description: extractDescription(ticket.fields.description),
       });
@@ -69,7 +77,7 @@ export class JiraService {
     return tickets;
   }
 
-  async getDataTicketId(url: string) {
+  async getTicketById(url: string) {
     const data = await fetch(url, {
       method: "GET",
       headers: {
@@ -78,10 +86,16 @@ export class JiraService {
       },
     });
     const json = await data.json();
+    const status = json.fields.status.name;
     const description = extractDescription(json.fields.description);
     const title = json.fields.summary;
-
-    return { title: title, content: description };
+    const ticket: JiraTicketNoUrl = {
+      title: title,
+      description: description,
+      status: status,
+      id: json.id,
+    };
+    return ticket;
   }
 
   async getAllProject(url: string): Promise<JiraProject[]> {

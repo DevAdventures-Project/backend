@@ -21,25 +21,34 @@ export class JiraController {
     this.jiraService = new JiraService();
   }
 
+  //https://hackathonjirajirajirajirajira.atlassian.net/rest/api/3/issue/10011/transitions
   @Patch() // pass the ticket at done
   @ApiOkResponse()
   async update(@Body() { link }: JiraLinkToTicketDto) {
-    const urlJiraForTicket = `${process.env.JIRA_URL}${link}`;
-    return await this.jiraService.update(urlJiraForTicket);
+    const url = new URL(link);
+    const ticketKey = url.searchParams.get("selectedIssue");
+    if (!ticketKey) {
+      throw new Error("Invalid link");
+    }
+    const ticketDetail = await this.jiraService.getTicketById(
+      `${process.env.JIRA_URL}rest/api/3/issue/${ticketKey}`,
+    );
+    const urlToPatch = `${process.env.JIRA_URL}rest/api/3/issue/${ticketDetail.id}/transitions`;
+    return await this.jiraService.update(urlToPatch);
   }
 
-  @Post() //get ticket by id
+  @Post(":id") //get ticket by id
   @ApiCreatedResponse()
-  async create(@Param("id") id) {
-    const urlJiraForTicket = `${process.env.JIRA_URL}/rest/api/3/issue/${id}`;
-    return await this.jiraService.getDataTicketId(urlJiraForTicket);
+  async getOneTicketById(@Param("id") id: string) {
+    const urlJiraForTicket = `${process.env.JIRA_URL}rest/api/3/issue/${id}`;
+    return await this.jiraService.getTicketById(urlJiraForTicket);
   }
 
   @Get(":id")
   @ApiCreatedResponse()
   async getOne(@Param("id") id: string) {
     const jql = `project="${id}" AND status != "Done"`;
-    const urlJiraForTicketOfProject = `${process.env.JIRA_URL}/rest/api/3/search`;
+    const urlJiraForTicketOfProject = `${process.env.JIRA_URL}rest/api/3/search`;
     const fullUrl = `${urlJiraForTicketOfProject}?jql=${encodeURIComponent(jql)}`;
     return await this.jiraService.getDataTicketProjectId(fullUrl);
   }
@@ -47,7 +56,7 @@ export class JiraController {
   @Get()
   @ApiCreatedResponse()
   async getAllProject() {
-    const urlJiraForTicket = `${process.env.JIRA_URL}/rest/api/3/project`;
+    const urlJiraForTicket = `${process.env.JIRA_URL}rest/api/3/project`;
     return await this.jiraService.getAllProject(urlJiraForTicket);
   }
 }

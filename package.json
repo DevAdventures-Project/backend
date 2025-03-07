@@ -8,10 +8,11 @@
     "start": "pnpm prisma generate && nest start",
     "dev": "pnpm prisma generate && nest start --watch",
     "start:debug": "pnpm prisma generate && nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/src/main",
     "lint": "biome check --write --unsafe",
     "typecheck": "tsc --noEmit --skipLibCheck",
-    "prisma:deploy": "pnpm prisma migrate deploy"
+    "prisma:deploy": "pnpm prisma migrate deploy",
+    "test": "pnpm vitest"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.11",
@@ -37,13 +38,15 @@
     "@biomejs/biome": "^1.9.4",
     "@nestjs/cli": "^11.0.5",
     "@nestjs/schematics": "^11.0.2",
+    "@nestjs/testing": "^11.0.11",
     "@swc/cli": "^0.6.0",
     "@swc/core": "^1.11.7",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^22.13.9",
     "@types/passport-jwt": "^4.0.1",
     "prisma": "^6.4.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
   },
   "packageManager": "pnpm@10.5.2",
   "pnpm": {

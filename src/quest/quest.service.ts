@@ -157,6 +157,22 @@ export class QuestService {
   async findByIssueUrl(issueUrl: string) {
     return this.prisma.quest.findFirst({
       where: { link: issueUrl },
+      include: {
+        helpers: true,
+      },
+    });
+  }
+
+  async findByJiraId(jiraId: string) {
+    return this.prisma.quest.findFirst({
+      where: {
+        link: {
+          contains: jiraId,
+        },
+      },
+      include: {
+        helpers: true,
+      },
     });
   }
 

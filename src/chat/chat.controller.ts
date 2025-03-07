@@ -16,10 +16,10 @@ export class ChatController {
     return new MessageEntity(message);
   }
 
-  @Get("room/:room")
+  @Get("")
   @ApiOkResponse({ type: MessageEntity, isArray: true })
-  async findAllByRoom(@Param("room") room: string) {
-    const messages = await this.chatService.findAllByRoom(room);
+  async findAllMessages() {
+    const messages = await this.chatService.findAllMessages();
     return messages.map((message) => new MessageEntity(message));
   }
 }
