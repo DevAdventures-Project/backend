@@ -163,11 +163,11 @@ export class QuestService {
     });
   }
 
-  async findByJiraId(jiraId: string) {
+  async findByJiraKey(keyJiraTicket: string) {
     return this.prisma.quest.findFirst({
       where: {
         link: {
-          contains: jiraId,
+          contains: keyJiraTicket,
         },
       },
       include: {
