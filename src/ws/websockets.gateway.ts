@@ -77,8 +77,15 @@ export class WebsocketsGateway
     console.log(
       `Client with id ${client.id} sent position ${data} to rooms ${clientMapRooms}`,
     );
+    const player = this.players.get(client.id);
+    if (!player) return {
+      event: "sentPosition",
+      data: "false",
+    }
+    const playerParsed = JSON.parse(player);
+    const dataParsed = JSON.parse(data);
     clientMapRooms.forEach((room: string) => {
-      client.to(room).emit("position", data);
+      client.to(room).emit("position", JSON.stringify({...playerParsed, ...dataParsed}));
     });
     this.updatePlayerPosition(client, data);
     return {
