@@ -121,6 +121,53 @@ export class WebsocketsGateway
     client.emit("otherPlayers", JSON.stringify(otherPlayers.filter((player) => player !== this.players.get(client.id))));
   }
 
+  @SubscribeMessage("joinQuestRoom")
+  async handleJoinQuestRoom(
+    client: Socket,
+    payload: { questId: string; user: { id: string; pseudo: string } },
+  ) {
+    const { questId, user } = payload;
+    console.log(`Client with id ${client.id} joined quest room ${questId}`);
+    await client.join(questId);
+    client.emit("joinedQuestRoom", questId);
+    client.to(questId).emit("newMemberJoined", user);
+  }
+
+  @SubscribeMessage("leaveQuestRoom")
+  async handleLeaveQuestRoom(
+    client: Socket,
+    payload: { questId: string; user: { id: string; pseudo: string } },
+  ) {
+    const { questId, user } = payload;
+    console.log(`Client with id ${client.id} left quest room ${questId}`);
+    await client.leave(questId);
+    client.emit("leftQuestRoom", questId);
+    client.to(questId).emit("memberLeft", user);
+  }
+
+  @SubscribeMessage("sendQuestMessage")
+  handleSendQuestMessage(
+    client: Socket,
+    payload: {
+      questId: string;
+      message: {
+        content: string;
+        author: { id: string; pseudo: string };
+        createdAt: string;
+        quest: { id: string; title: string };
+      };
+    },
+  ): WsResponse<string> {
+    const { questId, message } = payload;
+    console.log(
+      `Client with id ${client.id} sent message to quest room ${questId}`,
+    );
+    client.to(questId).emit("questMessage", message);
+    return {
+      event: "questMessageSent",
+      data: "Message sent to quest room",
+    };
+  }
 
   handleConnection(client: Socket) {
     client.join("HUB");

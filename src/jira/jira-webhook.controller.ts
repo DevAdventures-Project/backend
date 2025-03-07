@@ -7,11 +7,12 @@ import {
   HttpStatus,
   Post,
 } from "@nestjs/common";
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { UsersService } from "src/users/users.service";
 import { QuestService } from "../quest/quest.service";
 import { JiraService } from "./jira.service";
 
-@Controller("jira/webhook")
+@Controller("hackathonjira/webhook")
 export class JiraWebhookController {
   constructor(
     private readonly questService: QuestService,
@@ -20,7 +21,6 @@ export class JiraWebhookController {
   ) {}
 
   @Post()
-  @HttpCode(HttpStatus.OK)
   // biome-ignore lint/suspicious/noExplicitAny: easier
   async webhook(@Body() body: any, @Headers() headers: unknown) {
     const id = body.issue.id;
@@ -29,7 +29,7 @@ export class JiraWebhookController {
 
     const urlJiraForTicket = `${process.env.JIRA_URL}rest/api/3/issue/${id}`;
     const jiraTicket = await this.jiraService.getTicketById(urlJiraForTicket);
-    console.log(`JiraTicket:: ${jiraTicket}`);
+    console.log(`JiraTicket:: ${jiraTicket.status}`);
 
     if (jiraTicket.status === "Terminé(e)") {
       const quest = await this.questService.findByJiraKey(key);
@@ -40,10 +40,10 @@ export class JiraWebhookController {
         for (const helper of quest.helpers) {
           await this.userService.updateCoins(helper.id, randomValue);
         }
-        return { status: "success" };
+        return true;
       }
     }
 
-    return { status: "fail" };
+    return false;
   }
 }
