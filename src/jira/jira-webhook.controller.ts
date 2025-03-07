@@ -11,7 +11,7 @@ import { UsersService } from "src/users/users.service";
 import { QuestService } from "../quest/quest.service";
 import { JiraService } from "./jira.service";
 
-@Controller("jira/webhook")
+@Controller("hackathonjira/webhook")
 export class JiraWebhookController {
   constructor(
     private readonly questService: QuestService,

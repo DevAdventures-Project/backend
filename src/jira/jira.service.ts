@@ -77,7 +77,7 @@ export class JiraService {
     return tickets;
   }
 
-  async getTicketById(url: string) {
+  async getTicketById(url: string): Promise<JiraTicketNoUrl> {
     const data = await fetch(url, {
       method: "GET",
       headers: {
