@@ -21,6 +21,7 @@ export class JiraWebhookController {
   ) {}
 
   @Post()
+  @HttpCode(HttpStatus.OK)
   // biome-ignore lint/suspicious/noExplicitAny: easier
   async webhook(@Body() body: any, @Headers() headers: unknown) {
     const id = body.issue.id;
