@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from "@nestjs/common";
@@ -14,6 +15,7 @@ import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
+  ApiQuery,
   ApiTags,
 } from "@nestjs/swagger";
 import { User } from "@prisma/client";
@@ -65,9 +67,15 @@ export class QuestController {
   }
 
   @Get()
+  @ApiQuery({
+    name: "status",
+    required: false,
+    type: String,
+    description: "Filtre pour le statut de la quête",
+  })
   @ApiOkResponse({ type: QuestEntity, isArray: true })
-  async findAll() {
-    const quests = await this.questService.findAll();
+  async findAll(@Query("status") status?: string) {
+    const quests = await this.questService.findAll(status);
     return quests.map((quest) => new QuestEntity(quest));
   }
 

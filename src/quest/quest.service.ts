@@ -85,8 +85,10 @@ export class QuestService {
     });
   }
 
-  findAll() {
+  findAll(status?: string) {
+    const filter = status ? { status } : {};
     return this.prisma.quest.findMany({
+      where: filter,
       include: {
         author: {
           select: {
