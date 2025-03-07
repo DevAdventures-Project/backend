@@ -13,7 +13,7 @@ import { Server, Socket } from "socket.io";
 export class WebsocketsGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
-  maps = ["HUB", "MAP1"];
+  maps = ["HUB", "Cobol", 'Javascript', 'Scratch'];
   players = new Map<string, string>();
 
   @WebSocketServer() io: Server;
@@ -44,17 +44,9 @@ export class WebsocketsGateway
     if(!player) return;
     console.log(`Client with id ${client.id} joined room ${room}`);
     const clientMapRooms = this.getClientMapRooms(client);
-    if (clientMapRooms.length > 0 && this.maps.includes(room))
-      return {
-        event: "joinedRoom",
-        data: "Already in a map room",
-      };
     switch(room) {
-      case "MAP1":
-        this.updatePlayerPosition(client, {...JSON.parse(player),x: 200, y: 660 });
-        break;
       case "HUB":
-        this.updatePlayerPosition(client, {...JSON.parse(player),x: 410, y: 390 });
+        this.updatePlayerPosition(client, {...JSON.parse(player),x: 410, y: 402 });
         break;
     }
     await client.join(room);
