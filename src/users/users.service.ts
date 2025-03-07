@@ -38,6 +38,7 @@ export class UsersService {
         questsCreated: true, // Quêtes créées par l'utilisateur
         questsHelped: true, // Quêtes où il est helper
         ranks: true, // Ses ranks par catégorie
+        inventory: true, // Son inventaire
       },
     });
   }
