@@ -21,7 +21,7 @@ export class JiraWebhookController {
   ) {}
 
   @Post()
-  @ApiCreatedResponse()
+  @HttpCode(HttpStatus.OK)
   // biome-ignore lint/suspicious/noExplicitAny: easier
   async webhook(@Body() body: any, @Headers() headers: unknown) {
     const id = body.issue.id;
@@ -41,10 +41,10 @@ export class JiraWebhookController {
         for (const helper of quest.helpers) {
           await this.userService.updateCoins(helper.id, randomValue);
         }
-        return { status: "success" };
+        return true;
       }
     }
 
-    return { status: "fail" };
+    return false;
   }
 }
