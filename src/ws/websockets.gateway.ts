@@ -40,6 +40,8 @@ export class WebsocketsGateway
 
   @SubscribeMessage("joinRoom")
   async handleJoinRoom(client: Socket, room: string) {
+    const player = this.players.get(client.id);
+    if(!player) return;
     console.log(`Client with id ${client.id} joined room ${room}`);
     const clientMapRooms = this.getClientMapRooms(client);
     if (clientMapRooms.length > 0 && this.maps.includes(room))
@@ -47,6 +49,14 @@ export class WebsocketsGateway
         event: "joinedRoom",
         data: "Already in a map room",
       };
+    switch(room) {
+      case "MAP1":
+        this.updatePlayerPosition(client, {...JSON.parse(player),x: 200, y: 660 });
+        break;
+      case "HUB":
+        this.updatePlayerPosition(client, {...JSON.parse(player),x: 410, y: 390 });
+        break;
+    }
     await client.join(room);
     client.to(room).emit("joinedRoom", `${this.players.get(client.id)}`);
     console.log("joinRoom", client.rooms);
