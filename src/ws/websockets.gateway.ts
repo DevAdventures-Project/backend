@@ -14,6 +14,7 @@ export class WebsocketsGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
   maps = ["HUB", "MAP1"];
+  players = new Map<string, string>();
 
   @WebSocketServer() io: Server;
 
@@ -47,8 +48,8 @@ export class WebsocketsGateway
         data: "Already in a map room",
       };
     await client.join(room);
+    client.to(room).emit("joinedRoom", `${this.players.get(client.id)}`);
     console.log("joinRoom", client.rooms);
-    client.emit("joinedRoom", room);
   }
 
   @SubscribeMessage("leaveRooms")
@@ -57,7 +58,9 @@ export class WebsocketsGateway
     await Promise.all(
       Array.from(client.rooms).map((room: string) => client.leave(room)),
     );
-    client.emit("leftRooms", true);
+    const player = this.players.get(client.id);
+    if(!player) return;
+    this.io.sockets.emit("leftRooms", player);
   }
 
   @SubscribeMessage("leaveRoom")
@@ -65,6 +68,7 @@ export class WebsocketsGateway
     console.log(`Client with id ${client.id} left room ${room}`);
     await client.leave(room);
     client.emit("leftRoom", room);
+    client.to(room).emit("leftRoom", `${this.players.get(client.id)}`);
   }
 
   @SubscribeMessage("position")
@@ -76,11 +80,30 @@ export class WebsocketsGateway
     clientMapRooms.forEach((room: string) => {
       client.to(room).emit("position", data);
     });
+    this.updatePlayerPosition(client, data);
     return {
       event: "sentPosition",
       data: "true",
     };
   }
+
+  @SubscribeMessage("register")
+  handleRegister(client: Socket, data: string) {
+    console.log(`Client with id ${client.id} registered as ${data}`);
+    const clientMapRooms = this.getClientMapRooms(client);
+    this.players.set(client.id, data);
+    client.to("HUB").emit("joinedRoom", data);
+    client.emit("registered", data);
+  }
+
+  @SubscribeMessage("getOtherPlayers")
+  handleGetOtherPlayers(client: Socket) {
+    const mapRoom = this.getClientMapRooms(client)[0];
+    const otherPlayers = this.getPlayersOnMap(mapRoom);
+    console.log(JSON.stringify(otherPlayers.filter((player) => player !== this.players.get(client.id))))
+    client.emit("otherPlayers", JSON.stringify(otherPlayers.filter((player) => player !== this.players.get(client.id))));
+  }
+
 
   handleConnection(client: Socket) {
     client.join("HUB");
@@ -88,7 +111,10 @@ export class WebsocketsGateway
   }
 
   handleDisconnect(client: Socket) {
-    this.handleLeaveRooms(client);
+    const player = this.players.get(client.id);
+    if(!player) return;
+    this.io.sockets.emit("leftRooms", player);
+    this.players.delete(client.id);
     console.log("Disconnected");
   }
 
@@ -96,5 +122,22 @@ export class WebsocketsGateway
     return Array.from(client.rooms).filter((room: string) =>
       this.maps.includes(room),
     );
+  }
+
+  private getPlayersOnMap(map: string) {
+    return Array.from(this.players).filter(
+      ([clientId, _]) => {
+        const clientSocket = this.io.sockets.sockets.get(clientId);
+        return clientSocket ? this.getClientMapRooms(clientSocket).includes(map) : false;
+      },
+    ).map(([_, player]) => player);
+  }
+
+  private updatePlayerPosition(client: Socket, data: string) {
+    const player = this.players.get(client.id);
+    if (!player) return;
+    const playerParsed = JSON.parse(player);
+    const positions = JSON.parse(data);
+    this.players.set(client.id, JSON.stringify({ ...playerParsed, ...positions }));
   }
 }
