@@ -4,7 +4,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 
-export const roundsOfHashing = 10;
+const roundsOfHashing = 10;
 
 @Injectable()
 export class UsersService {

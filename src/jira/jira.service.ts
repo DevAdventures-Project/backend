@@ -1,18 +1,18 @@
 import * as process from "node:process";
 import { Injectable } from "@nestjs/common";
 
-export interface JiraProject {
+interface JiraProject {
   id: string;
   name: string;
 }
 
-export interface JiraTicket {
+interface JiraTicket {
   link: string;
   title: string;
   description: string;
 }
 
-export interface JiraTicketNoUrl {
+interface JiraTicketNoUrl {
   title: string;
   description: string;
   status: string;
@@ -121,7 +121,7 @@ export class JiraService {
 type JiraDescriptionContent = {
   type: string;
   text?: string;
-  content?: JiraDescriptionContent[]; // For nested content like paragraphs
+  content?: JiraDescriptionContent[];
 };
 
 type JiraDescription = {
@@ -141,7 +141,7 @@ function extractDescription(description: JiraDescription): string {
     if (block.type === "paragraph") {
       block.content?.forEach((content) => {
         if (content.type === "text" && content.text) {
-          text.push(content.text); // TypeScript now knows that content.text is a string
+          text.push(content.text);
         }
       });
     }
