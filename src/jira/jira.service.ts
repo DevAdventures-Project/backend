@@ -1,18 +1,18 @@
 import * as process from "node:process";
 import { Injectable } from "@nestjs/common";
 
-interface JiraProject {
+export interface JiraProject {
   id: string;
   name: string;
 }
 
-interface JiraTicket {
+export interface JiraTicket {
   link: string;
   title: string;
   description: string;
 }
 
-interface JiraTicketNoUrl {
+export interface JiraTicketNoUrl {
   title: string;
   description: string;
   status: string;
